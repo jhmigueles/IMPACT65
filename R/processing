@@ -1,0 +1,86 @@
+################################################################################
+#Packages
+################################################################################
+#Sólo la primera vez
+install.packages("GGIR") 
+
+#Siempre que abras R
+library(GGIR)
+
+################################################################################
+#Configuraciones básicas
+################################################################################
+datadir = "D://Accelerometry data/ActiveBrains/1_Pre-test/csv/Wrist/"
+outputdir= ""
+metadatadir = ""
+desiredtz = "Europe/Madrid"
+
+################################################################################
+#G.PART1
+################################################################################
+#5 seconds files
+g.part1(datadir = datadir, outputdir = outputdir, f0 = 1, f1 = 1, 
+        windowsizes = c(5, 900, 3600), 
+        desiredtz = desiredtz, dynrange = 8,
+        chunksize = 1, studyname = "impact65",
+        do.enmo = TRUE, do.anglez = TRUE,
+        do.cal = TRUE, use.temp = TRUE, spherecrit = 0.3, minloadcrit = 72, 
+        printsummary = TRUE, print.filename = TRUE, overwrite = FALSE)
+
+################################################################################
+#G.PART2
+################################################################################
+g.part2(datadir = datadir, metadatadir = metadatadir,
+        f0 = 1, f1 = 109,
+        strategy = 1,
+        hrs.del.start = 0,
+        hrs.del.end = 0,
+        maxdur = 0,
+        includedaycrit = 0,
+        qlevels = c(0,0.1,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.75,0.8,0.9,1),
+        idloc = 2,
+        do.imp = TRUE,
+        epochvalues2csv = TRUE,
+        desiredtz = desiredtz,
+        dayborder = 7,bout.metric = 1,closedbout = F)
+
+################################################################################
+#G.PART3
+################################################################################
+g.part3(metadatadir=metadatadir,
+        f0 = 1,f1 = 109,
+        anglethreshold = 5,timethreshold = 5,
+        ignorenonwear=FALSE,
+        overwrite=FALSE,
+        desiredtz = desiredtz)
+
+################################################################################
+#G.PART4
+################################################################################
+g.part4(datadir=datadir, metadatadir=metadatadir, 
+        f0 = 1,f1 = 109,idloc=2,
+        colid = 1, coln1 = 2, nnights = 7,
+        sleeplogidnum=FALSE, 
+        do.visual=TRUE, 
+        outliers.only = FALSE,
+        excludefirstlast = FALSE, 
+        criterror = 5, includenightcrit = 0,
+        relyonsleeplog = FALSE,
+        storefolderstructure = FALSE,
+        overwrite = FALSE)
+
+################################################################################
+#G.PART5
+################################################################################
+#ENMO WRIST
+g.part5(datadir=datadir, metadatadir=metadatadir, f0=1,f1=109, acc.metric = "ENMO",
+        strategy=1, maxdur=0, hrs.del.start=0, hrs.del.end =0, excludefirstlast=TRUE,
+        windowsizes=c(5,900,3600),
+        storefolderstructure=FALSE,
+        boutcriter.mvpa=0.8, boutcriter.in=0.9, boutcriter.lig=0.8,
+        threshold.lig = c(35.6), threshold.mod = c(201.4), threshold.vig = c(707.0),
+        timewindow=c("WW"), winhr = 5, M5L5res = 10,
+        boutdur.mvpa = c(1,5,10), boutdur.in = c(10,20,30), boutdur.lig = c(1,5,10),
+        overwrite=FALSE, desiredtz=desiredtz, bout.metric=2, loglocation = loglocation, dayborder = 7)
+
+g.report.part5(metadatadir, f0 = 1, f1 = 109, loglocation = loglocation, includenightcrit = 4, includedaycrit = 10)
